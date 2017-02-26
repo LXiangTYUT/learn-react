@@ -9,21 +9,19 @@
  */
 
 module.exports = {
-    entry: "./index.jsx",
+    entry: "./index.js",
     output: {
-        path: __dirname + "/assets/",
+        // path: __dirname + "/assets/",
         filename: "bundle.js"
     },
     module: {
         loaders: [
             {
-                test: /\.jsx?$/,
-                exclude:/[node_modules|lib]/,
-                loader: 'babel',
-                      query: {
-                        presets: ['react']
-                      }
+                test: /\.js?$/,
+                exclude: /node_modules/,
+                loader: 'babel'
             }
         ]
     }
+
 };
