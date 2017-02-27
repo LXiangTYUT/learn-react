@@ -7,21 +7,28 @@
  *  Company:中信银行太原分行
  *
  */
-
+var path = require("path");
+var webpack = require("webpack");
 module.exports = {
-    entry: "./index.js",
+    entry: "./app/index.jsx",
     output: {
-        // path: __dirname + "/assets/",
+        path: __dirname + "/build/",
         filename: "bundle.js"
     },
     module: {
-        loaders: [
+        rules: [
             {
-                test: /\.js?$/,
-                exclude: /node_modules/,
-                loader: 'babel'
+                test: /\.js[x]?$/,
+                exclude: [
+                    path.resolve(__dirname,"node_module"),
+                    path.resolve(__dirname,"lib"),
+                ],
+                loaders: ['react-hot-loader','babel-loader']
             }
         ]
-    }
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin()
+    ]
 
 };
