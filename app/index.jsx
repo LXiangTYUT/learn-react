@@ -10,9 +10,9 @@ const Avatar = React.createClass(
     }
 );
 const Welcome = React.createClass({
-    handleClick:function(e){
+    handleClick: function (e) {
         e.preventDefault();
-        this.props.className="H3";
+        this.props.className = "H3";
     },
     getDefaultProps: function () {
         return {
@@ -34,7 +34,7 @@ const App = React.createClass({
                 <Welcome name="Changxing Liu"/>
             </div>)
     }
-})
+});
 
 ReactDOM.render(
     <Welcome/>,
