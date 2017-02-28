@@ -59,11 +59,23 @@ ANT -- [Babel](https://babeljs.io/)（这个东西是是一个广泛使用的转
 
 webpack
 
+Ract-Router
+
+
+
+
+
+
+
 
 
 下面分别学习需要储备的知识
 
 #### NPM
+
+----
+
+待补充..
 
 #### Babel
 
@@ -145,4 +157,145 @@ $ npm install --save-dev babel-cli
 
 
 Webpack
+
+
+
+### React
+
+---
+
+####  组件及其生命周期
+
+组件就是某一独立的模块，可以包含元素（也即官网中的element）可以包含其他组件，但是不提倡，组件的定义方式有三种：
+
+```jsx
+//1 函数
+function Welcome(props){
+	return <div><h2>Hello ,{this.props.name}!</h2></div>;
+}
+
+//2 ES6 定义类
+class Welcome extend React.Componnet{
+  render(){
+    return <div><h2>Hello ,{this.props.name}!</h2></div>;
+  }
+}
+
+//3 传统经典定义
+const Welcome = React.createClass({
+  render(){
+    return <div><h2>Hello ,{this.props.name}!</h2></div>;
+  }
+});
+
+```
+
+由于React仅在加载调用`ReactDom.render()` 才去渲染Dom，非必要时刻是不会去渲染Dom的，这是其原则之一，见官网下方说明：
+
+>**Note:**
+>
+>In practice, most React apps only call `ReactDOM.render()` once. In the next sections we will learn how such code gets encapsulated into [stateful components](https://facebook.github.io/react/docs/state-and-lifecycle.html).
+>
+>We recommend that you don't skip topics because they build on each other.
+
+那如何实现更新组件呢？机制是什么？
+
+现在知道React只有在一个办法能更新Dom，那就是`ReactDom.render()`方法，那么考虑Node的异步事件机制，是否会有一个事件来触发执行这个方法？答案就是— **state**属性，先看官网解答
+
+> **State** is similar to props, but it is private and fully controlled by the component.
+>
+> We [mentioned before](https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components) that components defined as classes have some additional features. Local state is exactly that: a feature available only to classes.
+
+官网指出两点
+
+1. **State**是一个组件的内部Private属性
+
+2. 只有一个**按类方式定义**的组件才有State属性
+
+   所以这里可以明了，React对于类定义的组件提供了一个State属性来记录组件的状态，同时肯定有setState方法来改变这个状态，同时会触发`ReactDOM.render()`方法
+
+而一个组件从创建到渲染到结束这个生命周期就是类似像Tomcat的 Listeners设计，提供了一种HOOK，查看官网文档可知，一个组件的生命周期事件有以下几几种 —>官网传送门](https://facebook.github.io/react/docs/react-component.html)
+
+>#### Mounting 
+>
+>These methods are called when an instance of a component is being created and inserted into the DOM:
+>
+>- [`constructor()`](https://facebook.github.io/react/docs/#constructor)
+>- [`componentWillMount()`](https://facebook.github.io/react/docs/#componentwillmount)
+>- [`render()`](https://facebook.github.io/react/docs/#render)
+>- [`componentDidMount()`](https://facebook.github.io/react/docs/#componentdidmount)
+>
+>#### Updating 
+>
+>An update can be caused by changes to props or state. These methods are called when a component is being re-rendered:
+>
+>- [`componentWillReceiveProps()`](https://facebook.github.io/react/docs/#componentwillreceiveprops)
+>- [`shouldComponentUpdate()`](https://facebook.github.io/react/docs/#shouldcomponentupdate)
+>- [`componentWillUpdate()`](https://facebook.github.io/react/docs/#componentwillupdate)
+>- [`render()`](https://facebook.github.io/react/docs/#render)
+>- [`componentDidUpdate()`](https://facebook.github.io/react/docs/#componentdidupdate)
+>
+>#### Unmounting 
+>
+>This method is called when a component is being removed from the DOM:
+>
+>- [`componentWillUnmount()`](https://facebook.github.io/react/docs/#componentwillunmount)
+
+​	一个小例子，一个网页计时器
+
+```jsx
+import React from "react";
+import ReactDOM from "react-dom";
+
+
+class Timer extends React.Component{
+  //构造函数
+  constructor(props){
+    super(props);
+    this.state = {date:new Date};
+  }
+  
+  componentDidMount(){
+    this.timerID = setInterval(()=>this.tick(),1000);
+  }
+  componentWillUnmount(){
+	clearInterval(this.timerID);
+  }
+  //调用setState ,来触发ReactDom.render方法 达到重新渲染DOM的目的
+  tick(){
+    this.setState({date:new Date});
+  }
+  render(props){
+    return(<h2>It is {this.state.date.toLocalTimeString()}</h2>); 
+  }
+}
+
+//render
+ReactDOM.render(<Timer/>,document.getElementById("root"));
+```
+
+**PS：**
+
+`setState ` 有两种调用方式，第一种接受一个`Object` ,另外一种接收一个函数 , 见官网说明如下
+
+>```
+>// Correct
+>this.setState((prevState, props) => ({
+>  counter: prevState.counter + props.increment
+>}));
+>
+>```
+>
+>We used an [arrow function](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/Arrow_functions) above, but it also works with regular functions:
+>
+>```
+>// Correct
+>this.setState(function(prevState, props) {
+>  return {
+>    counter: prevState.counter + props.increment
+>  };
+>});
+>```
+
+
 
